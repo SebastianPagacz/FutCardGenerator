@@ -9,6 +9,7 @@ internal class CardBase
     private string _name;
     private string _surrname;
     private int _overall;
+    private Positions _positions;
     private bool _rarity;
     private int _pace;
     private int _shooting;
@@ -18,12 +19,13 @@ internal class CardBase
     private int _physicality;
 
     // Card Constructors
-    public CardBase(string name, string surrname, bool rarity, int overall, int pace, int shooting, int passing, int dribling, int defending, int physicality)
+    public CardBase(string name, string surrname, bool rarity, int overall, Positions position,int pace, int shooting, int passing, int dribling, int defending, int physicality)
     {
         Name = name;
         Surrname = surrname;
         Rarity = rarity;
         Overall = overall;
+        Position = position;
         Pace = pace;
         Shooting = shooting;
         Passing = passing;
@@ -38,6 +40,7 @@ internal class CardBase
         Surrname = "Unknown";
         Rarity = false;
         Overall = 1;
+        Position = Positions.ST;
         Pace = 1;
         Shooting = 1;
         Passing = 1;
@@ -46,7 +49,7 @@ internal class CardBase
         Physicality = 1;
     }
     // Card properties using validation methods
-    public string Name 
+    public string Name
     {
         get => _name;
         init
@@ -54,70 +57,75 @@ internal class CardBase
             _name = StatsValidator.NameLimiter(value, 3, 25);
         }
     }
-    public string Surrname 
-    { 
+    public string Surrname
+    {
         get => _surrname;
         init
         {
             _surrname = StatsValidator.NameLimiter(value, 3, 25);
-        } 
+        }
     }
-    public int Overall 
-    { 
-        get => _overall; 
-        init
+    public int Overall
+    {
+        get => _overall;
+        set
         {
             _overall = StatsValidator.StatLimiter(value);
         }
     }
-    public bool Rarity 
-    { 
-        get => _rarity; 
-        init => _rarity = value; 
+    public bool Rarity
+    {
+        get => _rarity;
+        init => _rarity = value;
     }
-    public int Pace 
-    { 
-        get => _pace; 
+    public Positions Position
+    {
+        get => _positions;
+        set => _positions = value;
+    }
+    public int Pace
+    {
+        get => _pace;
         init
         {
             _pace = StatsValidator.StatLimiter(value);
         }
     }
-    public int Shooting 
-    { 
+    public int Shooting
+    {
         get => _shooting;
         init
         {
             _shooting = StatsValidator.StatLimiter(value);
-        } 
+        }
     }
-    public int Passing 
-    { 
-        get => _passing; 
+    public int Passing
+    {
+        get => _passing;
         init
         {
             _passing = StatsValidator.StatLimiter(value);
-        } 
+        }
     }
-    public int Dribling 
-    { 
-        get => _dribling; 
+    public int Dribling
+    {
+        get => _dribling;
         init
         {
             _dribling = StatsValidator.StatLimiter(value);
-        } 
+        }
     }
-    public int Defending 
-    { 
-        get => _defending; 
+    public int Defending
+    {
+        get => _defending;
         init
         {
             _defending = StatsValidator.StatLimiter(value);
-        } 
+        }
     }
-    public int Physicality 
-    { 
-        get => _physicality; 
+    public int Physicality
+    {
+        get => _physicality;
         init
         {
             _physicality = StatsValidator.StatLimiter(value);
@@ -142,6 +150,15 @@ internal class CardBase
     //Displays information about a card
     public void Info()
     {
-        Console.WriteLine($"Name: {Name} Surrname: {Surrname} \nRarity {Rarity} Level {CalculateLevel(Overall)} \nPac {Pace} Dri {Dribling} \nSho {Shooting} Def {Defending} \nPas {Passing} Phy {Physicality}"); 
+        Console.WriteLine($"Name: {Name} Surrname: {Surrname} \nRarity {Rarity} Level {CalculateLevel(Overall)} \nPac {Pace} Dri {Dribling} \nSho {Shooting} Def {Defending} \nPas {Passing} Phy {Physicality}");
+    }
+
+    public double CalculateOverall(CardBase card)
+    {
+        switch (card.Position)
+        {
+            case Positions.ST:
+                return card.Overall = MathF.Round((card.Pace * 1.5 + card.Shooting * 1.8 + card.Passing * 1.2 + card.Dribling * 1.4 + card.Defending * 0.2 + card.Physicality) / 6);
+        }
     }
 }
